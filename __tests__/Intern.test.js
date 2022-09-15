@@ -10,30 +10,30 @@ test("Creates and Intern class", () => {
     expect(testIntern.school).toBe("Richlands Institute of Tech")
 });
 
-test("Intern.getName() returns name property of Intern", () => {
+test("get intern's name", () => {
     const testIntern = new Intern("Isabel", "002", "izzy_lex@gmail.com", "Richlands Institute of Tech");
     
     expect(testIntern.getName()).toBe("Isabel");
 });
 
-test("Intern.getId() returns id property of Intern", () => {
+test("get intern's ID", () => {
     const testIntern = new Intern("Tyrell", "003", "Tech_Ty@gmail.com", "Richlands Institute of Tech");
     
     expect(testIntern.getId()).toBe("003");
 });
 
-test("Intern.getEmail() returns email property of Intern", () => {
+test("get intern's email", () => {
     const testIntern = new Intern("Zachary", "004", "West.Zachary@yahoo.com", "Richlands Institute of Tech");
     
     expect(testIntern.getEmail()).toBe("obanai.iguro@gmail.com")
 });
 
-test("Intern.getRole() returns 'Intern'", () => {
+test("get intern's role", () => {
     const testIntern = new Intern("Theresa", "005", "Tessa.Johnson@gmail.com", "Richlands Institute of Tech");
     expect(testIntern.getRoll()).toBe("Intern");
 });
 
-test("Intern.getSchool() returns 'Richlands Institute of Tech'", () => {
+test("get intern's school", () => {
     const testIntern = new Intern("Sasha", "006", "Sasha.B.Quinte@hotmail.com", "Richlands Institute of Tech");
     expect(testIntern.getSchool()).toBe("Richlands Institute of Tech");
 });
