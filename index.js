@@ -1,15 +1,17 @@
 const inquirer = require('inquirer');
-const Employee = require('../lib/employee');
-const Engineer = require("../lib/engineer");
-const Manager = require("../lib/manager");
-const Intern = require("../lib/intern");
-const generatePage = require('./src/page-template.js');
+const fs = require('fs')
+const path = require('path')
+const Employee = require("./lib/employee");
+const Engineer = require("./lib/engineer");
+const Manager = require("./lib/manager");
+const Intern = require("./lib/intern");
+const pageTemplate = require('./src/page-template.js');
 const { copyFile, writeFile } = require('./utils/generate-site.js');
 
 
 let validation = response => { // validation checker to prevent blank responses
     if (!response) {
-        console.log("Response cannot be left blank! Please try again")
+        console.log(" --Response cannot be left blank! Please try again")
         return false
     } else {
         return true
@@ -20,7 +22,7 @@ let emailValidation = response => { // checks for proper email format
     if(new RegExp('^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\.([a-zA-Z]{2,5})$').test(response)) {
         return true
     } else {
-        console.log("Please re-enter the email address in proper format")
+        console.log(" --Please re-enter the email address in proper format")
         return false
     }
 }
@@ -28,38 +30,152 @@ let emailValidation = response => { // checks for proper email format
 // empty array for Team Members
 let teamMembers =[] 
 
+console.log("--------Build Your Team-----------")
+
+// function to add Manager and begin building team
 const addManager = () => {
     return inquirer
         .prompt([
             {
-                type: 'input', // asks managers name
-                name: 'managerName',
+                type: 'input',
+                name: 'name',
                 message: "What is the team Manager's name?",
                 validate: validation
             },
             {
-                type: 'input', // asks managers ID. string so people can enter any character if their ID isnt numerical
-                name: 'managerID',
+                type: 'input',
+                name: 'id',
                 message: "What is the team Manager's employee ID?",
                 validate: validation
             },
             {
-                type: 'input', // asks managers email
-                name: 'managerEmail',
+                type: 'input',
+                name: 'email',
                 message: "What is the team Manager's email?",
                 validate: emailValidation
             },
             {
-                type: 'input', // asks managers phone number
-                name: 'managerNum',
-                message: "What is the team Manager's office number? If they have an extension, please enter ext. [XYZ] after the phone number. ",
+                type: 'input',
+                name: 'officeNum',
+                message: "What is the Manager's office number?",
                 validate: validation
             }
         ])
-        .then(employeeData => {
-            const { managerName, managerID, managerEmail, managerNum } = employeeData
-            const manager = new Manager(managerName, managerID, managerEmail, managerNum)
-            team.push(manager)
+        .then(managerData => {
+            teamMembers.push(new Manager(
+                managerData.name, 
+                managerData.id, 
+                managerData.email, 
+                managerData.officeNum
+                ));    
+            addEmployee();
+        });
+};
+
+
+// Stop building team or select role of next employee
+const addEmployee = () => {
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'choice',
+            message: 'Select one of the below option',
+            choices: ['Add Engineer', 'Add an Intern', 'Team is Complete']
+        },
+    ]).then(data => {
+        switch (data.choice) {
+            case "Add Engineer":
+                addEngineer()
+                break;
+
+            case "Add an Intern":
+                addIntern();
+                break;
+            default: 
+                {
+                    const data = pageTemplate(teamMembers);
+                    writeFile(data)
+                    .then(writeFileResponse =>{
+                        console.log(writeFileResponse);
+                        copyFile();
+                    });
+                }
         }
-        )
-}
+    });
+}// Function to add employees to the team for that Manager
+const addEngineer = async () => {
+    return inquirer.prompt([        
+        { 
+            type: 'input', 
+            name: 'name',
+            message: "What is the Employee's name?",
+            validate: validation
+        },
+        { 
+            type: 'input', 
+            name: 'id',
+            message: "What is the Employee's ID?",
+            validate: validation
+        },
+        { 
+            type: 'input',
+            name: 'email', 
+            message: "What is the Employee's email?",
+            validate: emailValidation
+        },
+        {
+            type: 'input',
+            name: 'github',
+            message: "What is the Employee's GitHub?",
+            validate: validation
+        }
+    ])
+    .then(engineerData => {
+        teamMembers.push (new Engineer(
+            engineerData.name,
+            engineerData.id,
+            engineerData.email,
+            engineerData.github
+            ));        
+        addEmployee();
+    });
+};
+
+const addIntern = async () => {
+    return inquirer.prompt([
+        { 
+            type: 'input', 
+            name: 'name',
+            message: "What is the Employee's name?",
+            validate: validation
+        },
+        { 
+            type: 'input', 
+            name: 'id',
+            message: "What is the Employee's ID?",
+            validate: validation
+        },
+        { 
+            type: 'input',
+            name: 'email', 
+            message: "What is the Employee's email?",
+            validate: emailValidation
+        },
+        { 
+            type: 'input',
+            name: 'school',
+            message: "What school is the employee currently attending?", 
+            validate: validation
+        }
+    ]).then(InternData => {
+        teamMembers.push (new Intern(
+            InternData.name,
+            InternData.id,
+            InternData.email,
+            InternData.school
+            ));       
+        addEmployee();
+    });
+};
+
+addManager();
