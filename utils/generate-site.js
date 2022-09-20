@@ -1,8 +1,9 @@
 const fs = require('fs');
 
+// Writing HTML to dist folder
 const writeFile = fileContent => {
     return new Promise((resolve, reject) => {
-      fs.writeFile('../dist/index.html', fileContent, err => {
+      fs.writeFile('./dist/index.html', fileContent, err => {
     
         if (err) {
           reject(err);
@@ -17,10 +18,10 @@ const writeFile = fileContent => {
     });
   };
 
- // copying file
+ // copying css file
 const copyFile = () => {
     return new Promise((resolve, reject) => {
-      fs.copyFile('../src/stylesheet.css', '../dist/stylesheet.css', err => {
+      fs.copyFile('./src/style.css', './dist/style.css', err => {
         if (err) {
           reject(err);
           return;

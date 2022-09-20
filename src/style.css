@@ -1,0 +1,49 @@
+* {
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    font-family: 'Tiro Gurmukhi', serif;
+}
+
+header {
+    height: 15vh;
+    background-color: #76c78d;
+    color: rgb(7, 5, 5);
+    text-align: center;
+    font-weight: bold;
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {    
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.349);
+    width: 18rem;
+}
+
+.container {  
+    font-size: 16px;   
+}
+
+.container .card-header {
+    background-color: #347fcf;
+    font-size: 20px;
+    font-weight: bold;
+    color:rgb(37, 35, 35);
+}
+
+.employee-id {
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.link:hover {
+    color: red;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+li a {
+    text-decoration: none;
+}

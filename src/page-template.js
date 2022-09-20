@@ -1,93 +1,117 @@
-function generateTeam(team) {
+function pageTemplate(data) {
 
-    let teamHtmlArray = [];
+    var teamHtml = "";
 
-    team.forEach((member) => {
-      if (member.getRole() == 'Manager') {
-        teamHtmlArray.push(`
-          <div class="col-12 mb-2 bg-dark text-light p-3">
-            <h3 class="team-member-name text-light">${member.name}</h3>
-            <h4 class="team-member-role">
-              Manager
-            </h5>
-            <p>ID: ${member.id}</p>
-            <p>Email: <a href="mailto:${member.email}">${member.email}</a></p>
-            <p>Office Number: ${member.officeNumber}</p>
-          </div>
-        `)
-      };
-      if (member.getRole() == 'Engineer') {
-        teamHtmlArray.push(`
-          <div class="col-12 mb-2 bg-dark text-light p-3">
-            <h3 class="team-member-name text-light">${member.name}</h3>
-            <h4 class="team-member-role">
-              Engineer
-            </h5>
-            <p>ID: ${member.id}</p>
-            <p>Email: <a href="mailto:${member.email}">${member.email}</a></p>
-            <p>GitHub: <a href="https://github.com/${member.github}">${member.github}</a></p>
-          </div>
-        `)
-      };
-      if (member.getRole() == 'Intern') {
-        teamHtmlArray.push(`
-          <div class="col-12 mb-2 bg-dark text-light p-3">
-            <h3 class="team-member-name text-light">${member.name}</h3>
-            <h4 class="team-member-role">
-              Intern
-            </h5>
-            <p>ID: ${member.id}</p>
-            <p>Email: <a href="mailto:${member.email}">${member.email}</a></p>
-            <p>School: ${member.school}</p>
-          </div>
-        `)
-      }
-    });
+    data.forEach(element => {
+        let type = element.getRole();
 
-    const teamHtml = teamHtmlArray.join('');
+         teamHtml += type === "Manager" ? createManager(element) : 
+         type === "Engineer" ? createEngineer(element) :
+          createIntern(element);
 
-    const sectionHtml = `
-      <section class="my-3" id="team">
-        <div class="flex-row justify-space-between">
-          ${teamHtml}
-        </div>
-      </section>
-    `;
-
-    return sectionHtml;
-};
-
-
-function pageTemplate(teamData) {
+         });
+          
     return `
-    <!DOCTYPE html> 
-    <html lang="en"> 
-    <head>
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
         <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Team</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
-        <link rel="stylesheet" href="style.css">
-    </head>
-    
-    <body>
+        <link rel="stylesheet" href="../src/style.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link href="https://fonts.googleapis.com/css2?family=Inconsolata&family=Saira+Condensed&family=Tiro+Gurmukhi&display=swap" rel="stylesheet">
+        
+        <title>Team Members</title>
+      </head>
+      <body>
         <header>
-            <nav class="navbar bg-light">
-                <div class="container-fluid">
-                  <span class="navbar-brand mb-0 h1">Team</span>
-                </div>
-            </nav>
+          <p>My Team</p>
         </header>
-        <main class="container team">
-            ${generateTeam(teamData)}
-        </main>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
-    </body>
+        <section class="container d-md-flex flex-row flex-wrap">${teamHtml}</section>
+      </body>
     </html>
-    `;
-};
+    `
+}
+
+//manager
+function createManager(data) {
+
+    return `
+    <div class="card  m-3">
+    <div class="card-header text-center">
+      <p>${data.getName()}</p>
+      <p>
+      <i class="fa-sharp fa-solid fa-user-tie"></i> ${data.getRole()}
+      </p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        <label>Employee ID: </label><span class="employee-id"> ${data.getId()}</span>
+      </li>
+      <li class="list-group-item">
+        <label class="email">Email: </label>
+        <a class="link" href="mailto:${data.getEmail()}">${data.getEmail()}</a>
+      </li>
+      <li class="list-group-item">
+        <label> Office Number: </label><span> ${data.getOfficeNum()}</span>
+      </li>
+    </ul>
+  </div>
+    `
+}
+//engineer
+function createEngineer(data) {
+    return `
+    <div class="card  m-3">
+    <div class="card-header text-center">
+      <p>${data.getName()}</p>
+      <p>
+      <i class="fa-solid fa-user-gear"></i> ${data.getRole()}
+      </p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        <label>Employee ID: </label><span class="employee-id"> ${data.getId()}</span>
+      </li>
+      <li class="list-group-item">
+        <label class="email">Email: </label>
+        <a class="link" href="mailto:${data.getEmail()}">${data.getEmail()}</a>
+      </li>
+      <li class="list-group-item">
+        <label>Github: </label>
+        <a class="link" href="https://github.com/${data.getGithub()}">${data.getGithub()}</a>
+      </li>
+    </ul>
+  </div>
+  `
+}
+//intern
+function createIntern(data) {
+    return `
+    <div class="card  m-3">
+  <div class="card-header text-center">
+    <p>${data.getName()}</p>
+    <p>
+      <i class="fa-solid fa-user-graduate"></i> ${data.getRole()}
+    </p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+      <label>Employee ID: </label><span class="employee-id"> ${data.getId()}</span>
+    </li>
+    <li class="list-group-item">
+      <label class="email">Email: </label>
+      <a class="link" href="mailto:${data.getEmail()}">${data.getEmail()}</a>
+    </li>
+    <li class="list-group-item">
+      <label>School: </label> ${data.getSchool()}
+    </li>
+  </ul>
+</div>    
+    `
+}
 
 
 

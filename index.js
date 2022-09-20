@@ -1,6 +1,5 @@
 const inquirer = require('inquirer');
 const fs = require('fs')
-const path = require('path')
 const Employee = require("./lib/employee");
 const Engineer = require("./lib/engineer");
 const Manager = require("./lib/manager");
@@ -61,14 +60,14 @@ const addManager = () => {
                 validate: validation
             }
         ])
-        .then(managerData => {
+        .then(managerData => { //adds the manager into the team array
             teamMembers.push(new Manager(
                 managerData.name, 
                 managerData.id, 
                 managerData.email, 
                 managerData.officeNum
                 ));    
-            addEmployee();
+            addEmployee(); // runs function to either add employee or finish team building
         });
 };
 
@@ -102,7 +101,8 @@ const addEmployee = () => {
                 }
         }
     });
-}// Function to add employees to the team for that Manager
+
+}// add an engineer to the team
 const addEngineer = async () => {
     return inquirer.prompt([        
         { 
@@ -130,7 +130,7 @@ const addEngineer = async () => {
             validate: validation
         }
     ])
-    .then(engineerData => {
+    .then(engineerData => { // pushes engineer into the array
         teamMembers.push (new Engineer(
             engineerData.name,
             engineerData.id,
@@ -140,7 +140,7 @@ const addEngineer = async () => {
         addEmployee();
     });
 };
-
+// add an intern to the team
 const addIntern = async () => {
     return inquirer.prompt([
         { 
@@ -167,7 +167,7 @@ const addIntern = async () => {
             message: "What school is the employee currently attending?", 
             validate: validation
         }
-    ]).then(InternData => {
+    ]).then(InternData => { // pushes intern into the team array
         teamMembers.push (new Intern(
             InternData.name,
             InternData.id,
